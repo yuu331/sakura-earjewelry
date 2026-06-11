@@ -858,6 +858,15 @@
   }
   .space .pt h4{ margin: 0 0 4px; font-family: var(--jp-font); font-weight: 500; font-size: 15px; letter-spacing: 0.06em;}
   .space .pt p{ margin: 0; font-family: var(--sans); font-size: 12.5px; color: var(--ink-soft); line-height:1.8;}
+  @media (max-width: 879px){
+    .space .side{ text-align: center; }
+    .space .side .pt{
+      justify-content: center;
+      text-align: left;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+  }
 
   /* ========== KIDS ========== */
   .kids{ background: var(--bg); }
@@ -881,6 +890,10 @@
     background: rgba(255,255,255,0.4);
   }
   .kids-card .content{ position: relative; }
+  @media (max-width: 819px){
+    .kids-card .content{ text-align: center; }
+    .kids-card .content .kids-illust{ margin-left: auto; margin-right: auto; }
+  }
   .kids-card .ribbon{
     display: inline-block; font-family: var(--h-font); font-style: italic;
     color: var(--rose); font-size: 13px; letter-spacing: 0.22em;
