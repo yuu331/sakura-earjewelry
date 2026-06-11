@@ -118,9 +118,69 @@
   }
   .nav .nav-cta:hover{ background: #A4666C; transform: translateY(-1px);}
 
+  /* hamburger button (mobile only) */
+  .nav-toggle{ display: none; }
+
   @media (min-width: 980px){
     .nav{ display: block; }
     body{ padding-top: 70px; }
+  }
+
+  /* ===== mobile nav (< 980px): floating hamburger + dropdown ===== */
+  @media (max-width: 979px){
+    .nav{
+      display: block;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      padding: 0;
+      background: transparent;
+      backdrop-filter: none;
+      border-bottom: none;
+    }
+    .nav-inner{ position: relative; display: block; min-height: 0; }
+    /* ヒーロー内にロゴがあるので、バーのブランドと予約ボタンは隠す */
+    .nav .brand,
+    .nav .nav-cta{ display: none; }
+
+    .nav-toggle{
+      display: inline-flex; flex-direction: column; justify-content: center; gap: 5px;
+      position: absolute; top: 14px; right: 16px; z-index: 3;
+      width: 44px; height: 44px; padding: 0 11px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px -10px rgba(58,46,46,0.4);
+      cursor: pointer;
+    }
+    .nav-toggle span{
+      display: block; height: 1.6px; width: 100%;
+      background: var(--ink); border-radius: 2px;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    .nav.open .nav-toggle span:nth-child(1){ transform: translateY(6.6px) rotate(45deg); }
+    .nav.open .nav-toggle span:nth-child(2){ opacity: 0; }
+    .nav.open .nav-toggle span:nth-child(3){ transform: translateY(-6.6px) rotate(-45deg); }
+
+    .nav ul{
+      position: absolute; top: 0; left: 0; right: 0;
+      flex-direction: column; gap: 0;
+      margin: 0; padding: 70px 22px 18px;
+      background: rgba(251,247,244,0.97);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 24px 44px -28px rgba(58,46,46,0.35);
+      transform: translateY(-110%);
+      opacity: 0; pointer-events: none;
+      transition: transform .38s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+    }
+    .nav.open ul{ transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .nav ul li{ border-bottom: 1px solid var(--line); }
+    .nav ul li:last-child{ border-bottom: none; }
+    .nav ul li a{
+      display: block; padding: 15px 4px;
+      font-family: var(--jp-font); font-style: normal;
+      font-size: 15px; letter-spacing: 0.14em; color: var(--ink);
+    }
   }
 
   /* ========== HERO ========== */
@@ -683,15 +743,17 @@
   }
   .flow-item{
     display: grid;
-    grid-template-columns: 64px 1fr;
-    gap: 18px;
-    padding: 18px 0;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px 0;
     position: relative;
   }
   @media (min-width: 880px){
     .flow-item{
-      grid-template-columns: 1fr;
-      text-align: center;
+      max-width: none;
       padding: 0;
       gap: 14px;
     }
@@ -722,10 +784,9 @@
   .flow-item .content h4{
     margin:0 0 6px; font-family: var(--jp-font); font-weight: 500;
     font-size: 15px; letter-spacing: 0.08em;
-    padding-top: 16px;
   }
   @media (min-width: 880px){
-    .flow-item .content h4{ padding-top: 0; font-size: 14px;}
+    .flow-item .content h4{ font-size: 14px;}
   }
   .flow-item .content p{
     margin: 0; font-family: var(--sans); font-size: 12.5px;
@@ -1138,7 +1199,7 @@
       <img src="asset/logo-black-tight.png" alt="Sakura Earjewelry ロゴ" width="844" height="919">
       <span class="brand-text">Sakura<em>EAR JEWELRY</em></span>
     </a>
-    <ul>
+    <ul id="nav-menu">
       <li><a href="#sec-solution">about</a></li>
       <li><a href="#sec-menu">menu</a></li>
       <li><a href="#sec-flow">flow</a></li>
@@ -1148,6 +1209,9 @@
       <li><a href="#sec-access">access</a></li>
     </ul>
     <a href="#reserve" class="nav-cta">予約する →</a>
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -1577,6 +1641,20 @@
 
 <script>
 (function(){
+  // mobile nav toggle
+  const nav = document.querySelector('.nav');
+  const toggle = document.querySelector('.nav-toggle');
+  if (nav && toggle){
+    const setOpen = (open)=>{
+      nav.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
+    };
+    toggle.addEventListener('click', ()=> setOpen(!nav.classList.contains('open')));
+    nav.querySelectorAll('#nav-menu a').forEach(a=> a.addEventListener('click', ()=> setOpen(false)));
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') setOpen(false); });
+  }
+
   document.querySelectorAll('.note-tab').forEach(t=>{
     t.addEventListener('click', ()=>{
       document.querySelectorAll('.note-tab').forEach(x=>x.classList.remove('on'));
