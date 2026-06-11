@@ -1,0 +1,15 @@
+.DS_Store
+tmp/
+output/
+
+# 下書き・参考ファイルは公開しない
+Sakura-LP-standalone.html
+
+# アセットはサイトで使用中のものだけ公開（ホワイトリスト方式）
+asset/*
+!asset/23150.jpg
+!asset/23153.jpg
+!asset/23154.jpg
+!asset/23158.jpg
+!asset/logo-black-tight.png
+!asset/illust/
